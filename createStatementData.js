@@ -38,8 +38,16 @@ class PerformanceCalculator {
     }
 }
 
-function createPerformanceCalculator(aPerformance, playFor) {
-    return new PerformanceCalculator(aPerformance, playFor(aPerformance));
+class TragedyCalculator extends PerformanceCalculator {}
+class ComedyCalculator extends PerformanceCalculator {}
+
+function createPerformanceCalculator(aPerformance, aPlay) {
+    switch (aPlay.type) {
+        case "tragedy": return new TragedyCalculator(aPerformance, aPlay);
+        case "comedy": return new ComedyCalculator(aPerformance, aPlay);
+        default:
+            throw new Error(`unknown type: ${aPlay.type}`);
+    }
 }
 
 module.exports = function createStatementData(invoice, plays) {
@@ -61,7 +69,7 @@ module.exports = function createStatementData(invoice, plays) {
     }
 
     function enrichPerformance(aPerformance) {
-        const calculator = createPerformanceCalculator(aPerformance, playFor);
+        const calculator = createPerformanceCalculator(aPerformance, playFor(aPerformance));
         let result = Object.assign({}, aPerformance);
         result.play = calculator.play;
         result.amount = calculator.amount;
