@@ -15,19 +15,13 @@ function statement(invoice, plays) {
     return renderPlainText(statementData, plays);
 
     function totalAmount(data) {
-        let result = 0;
-        for (let perf of data.performances) {
-            result += perf.amount;
-        }
-        return result;
+        return data.performances
+            .reduce((total, p) => total + p.amount, 0);
     }
 
     function totalVolumeCredits(data) {
-        let result = 0;
-        for (let perf of data.performances) {
-            result += perf.volumeCredits;
-        }
-        return result;
+        return data.performances
+            .reduce((total, p) => total + p.volumeCredits, 0);
     }
 
     function enrichPerformance(aPerformance) {
@@ -87,7 +81,6 @@ function renderPlainText(data, plays) {
     result += `You earned ${(data.totalVolumeCredits)} credits\n`;
     return result;
 
-
     function usd(aNumber) {
         return new Intl.NumberFormat("en-US",
             {
@@ -95,8 +88,6 @@ function renderPlainText(data, plays) {
                 minimumFractionDigits: 2
             }).format(aNumber / 100);
     }
-
-
 }
 
 const expectedResult = `Statement for BigCo
