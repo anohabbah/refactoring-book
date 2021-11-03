@@ -1,18 +1,13 @@
 const invoices = require("./invoices.json");
 const plays = require("./plays.json");
 
-/**
- * @param { { customer: string, performances: { playID: string, audience: string }[] } } invoice
- * @param { { type: string, name: string } } plays
- * @return {string}
- */
-function statement(invoice, plays) {
+function createStatementData(invoice) {
     const statementData = {};
     statementData.customer = invoice.customer;
     statementData.performances = invoice.performances.map(enrichPerformance);
     statementData.totalAmount = totalAmount(statementData);
     statementData.totalVolumeCredits = totalVolumeCredits(statementData);
-    return renderPlainText(statementData, plays);
+    return statementData;
 
     function totalAmount(data) {
         return data.performances
@@ -70,7 +65,16 @@ function statement(invoice, plays) {
     }
 }
 
-function renderPlainText(data, plays) {
+/**
+ * @param { { customer: string, performances: { playID: string, audience: string }[] } } invoice
+ * @param { { type: string, name: string } } plays
+ * @return {string}
+ */
+function statement(invoice, plays) {
+    return renderPlainText(createStatementData(invoice));
+}
+
+function renderPlainText(data) {
     let result = `Statement for ${data.customer}\n`;
 
     for (let perf of data.performances) {
