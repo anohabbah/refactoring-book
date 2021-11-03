@@ -7,10 +7,11 @@ const plays = require("./plays.json");
  * @return {string}
  */
 function statement(invoice, plays) {
-    return renderPlainText(invoice, plays);
+    const statementData = {};
+    return renderPlainText(statementData, invoice, plays);
 }
 
-function renderPlainText(invoice, plays) {
+function renderPlainText(data, invoice, plays) {
     let result = `Statement for ${invoice.customer}\n`;
 
     for (let perf of invoice.performances) {
